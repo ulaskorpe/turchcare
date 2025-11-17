@@ -1,0 +1,93 @@
+laravel + react + inertia
+
+laravel install
+npm install
+npm install react react-dom
+
+ vite : asset magik
+
+npm install --save-dev @vitejs/plugin-react
+
+SS setup
+composer require inertiajs/inertia-laravel
+
+views/app.blade.php   create
+
+
+
+
+
+create inertia middleware
+
+php artisan inertia:middleware
+
+usage at Kernel.php ( recomended )
+
+use App\Http\Middleware\HandleInertiaRequests;
+
+protected $middlewareGroups = [
+    'web' => [
+        // Other middleware...
+        \App\Http\Middleware\HandleInertiaRequests::class,
+    ],
+];
+
+
+Some people add it manually in bootstrap/app.php like this:
+$app->middleware([
+    App\Http\Middleware\HandleInertiaRequests::class,
+]);
+
+or @ bootstrap/app.php
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(append: [
+            HandleInertiaRequests::class,
+        ]);
+    })
+bootstrap/app.php
+
+
+CS setup
+
+https://inertiajs.com/client-side-setup
+
+install npm react , initilize react
+add  2 app.js >  app.jsx
+
+vite.config.file > tell we use react
+
+  plugins: [
+        laravel({
+            // input: ['resources/css/app.css', 'resources/js/app.js'],
+            // refresh: true,
+            // react()
+            input: 'resources/js/app.jsx',
+            refresh:true
+        }),
+        react()
+    ],
+
+next 2 app.blade.php
+<head>
+    @viteReactRefresh
+    @vite('resources/js/app.jsx')
+    @inertiaHead
+</head>
+<body>
+    @inertia
+
+start creating pages under resources/js/Pages dir
+
+tailwind install
+npm install -D tailwindcss postcss autoprefixer
+npx tailwind init -p
+
+Route::inertia('/simple','Simple');
+
+progress indicators
+
+ziggy :
+composer require tightenco/ziggy
+import {useRoute } from '../../../vendor/tightenco/ziggy'
+app.blade.php >>     @routes  to head
+ <Link href={route('posts.show',item)}

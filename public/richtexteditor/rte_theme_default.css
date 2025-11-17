@@ -1,0 +1,51 @@
+.rte-container {
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    margin-top: 8px;
+}
+
+.rte-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px;
+    border-bottom: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
+}
+
+.rte-button {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333333;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.rte-button:hover {
+    background-color: #f0f0f0;
+    border-color: #cccccc;
+}
+
+.rte-editable {
+    min-height: 220px;
+    padding: 12px;
+    outline: none;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-y: auto;
+}
+
+.rte-editable:empty:before {
+    content: attr(data-placeholder);
+    color: #b3b3b3;
+}
+
+.rte-hidden-textarea {
+    display: none !important;
+}

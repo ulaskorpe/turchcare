@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Uygulamanın public dizininde olduğunu belirtmek için base path ayarlanabilir (gerekirse)
+    # RewriteBase /public/
+
+    # Doğrudan var olan dosya ya da dizinse yönlendirme yapma
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Tüm diğer istekleri index.php'ye yönlendir
+    RewriteRule ^ index.php [L]
+</IfModule>
