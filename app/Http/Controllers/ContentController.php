@@ -22,7 +22,7 @@ class ContentController extends Controller
     private $lang_array ;
     private $video_image_array ;
 
-    private $submit_form = false;
+    private $submit_form = true;
     use HttpResponses;
     private $service ;
     public function __construct(ContentServices $service){
@@ -38,10 +38,18 @@ class ContentController extends Controller
         return redirect()->route('content-update',$post['id']);
     }
 
-    public function list($type,$lang='TR',$parent_id=0){
+    public function list($typename,$lang='TR',$parent_id=0){
 
-         $type = Type::where('slug','=',$type)->first() ;
-
+         $type = Type::where('slug','=',$typename)->first() ;
+        if(empty($type)){
+            $type = Type::create([
+                'name'=>$typename,
+                'slug'=>GeneralHelper::fixName($typename), //Str::slug($typename),
+                'single'=>1,
+                'fields'=>'title',
+                'active'=>$typename,
+            ]);
+        }
          $fields = $this->getFields($type);
 
          if(in_array('parent_id',$fields)){
@@ -86,6 +94,7 @@ class ContentController extends Controller
 
 
     private function getFields($type){
+
         $array = explode(',',str_replace('\'','', $type['fields']));
         $arr = [];
         foreach($array as $a ){
@@ -112,6 +121,7 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
     public function create($type,$lang='tr',$parent_id=0){
 
         $type = Type::where('slug','=',$type)->first();
+
         if($type->single){
             die();
         }
@@ -120,47 +130,10 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
 
         $fields = $this->getFields($type);
 
-        $cats = [];
-        if(in_array('faq_id',$fields)){
-
-            $cats = Post::select('id','title')->where('type_id','=',51)
-            ->where('lang','=', session()->get('selectedLang'))
-            ->where('show_post','=',1)
-            ->orderBy('count', 'ASC')->get();
-
-        }
-        $products  =[];
-        if(in_array( 'product_id',$fields)){
-
-            $products = Post::select('id','title')->where('type_id','=',6)
-            ->where('lang','=', session()->get('selectedLang'))
-            ->where('show_post','=',1)
-            ->orderBy('count', 'ASC')->get();
-
-        }
-        $product_cats = [];
-
-        if($type['id']==6){ /// products
-                $product_cats =
-                Post::select('id','title')->where('type_id','=',5)
-                ->where('lang','=', session()->get('selectedLang'))
-                ->where('show_post','=',1)
-                ->orderBy('count', 'ASC')->get();
-         }
-
-        $tags = [];
-        if(in_array('tags',$fields)){
-
-            $tags = Post::select('id','title')->where('type_id','=',41)
-            ->where('lang','=', session()->get('selectedLang'))
-            ->where('show_post','=',1)
-            ->orderBy('title', 'ASC')->get();
-
-        }
 
         $count = Post::where('type_id','=',$type['id'])
         ->where('lang','=',$lang)->where('parent_id','=',$parent_id)->count();
-
+        //return $count;
         $parent=null;
         if($parent_id){
 
@@ -183,13 +156,13 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
 
 
 
-        return view('admin_panel.content_form',[ 'type'=>$type,'products'=>$products
+        return view('admin_panel.content_form',[ 'type'=>$type
         ,'fields'=>$fields ,'txt'=>$type['fields'],'langs'=>$this->lang_array,
         'parent_cat'=>$parent_cat,'parents_cats'=>$parent_cats,
-        'lang'=>$lang,'count'=>$count,'product_cats'=>$product_cats,
+        'lang'=>$lang,'count'=> $count,
         'post'=>null,'exe'=>"Ekle",'route'=>'content-create-post'
         ,'submit'=>$this->submit_form ,'parent'=>$parent ,'parent_id'=>$parent_id,
-        'cats'=>$cats,'tags'=>$tags,
+
         'selected_tags'=>[],
         'video_image_array'=>$this->priority_array($fields)
     ]);
@@ -205,30 +178,13 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
 
         $fields = $this->getFields($type);
         $images = ['image','second_image','third_image','forth_image','fifth_image'];
-
+        $array = [];
+        $array['type_id'] =$type['id'];
         foreach($fields as $field){
             if(!in_array($field,$images)){
 
                     if($field=='show_home'){
                         $array[$field] =    (!empty($request['show_home']))?1:0;
-
-                    }elseif($field == 'youtube_video'){
-
-                        if($request['youtube_video']){
-                            $array['youtube_video'] =  $this->youtube_post( $request ['youtube_video']);
-
-                          //  dd( $this->youtube_post( $request ['youtube_video']));
-                            }
-                    }elseif($field == 'faq_id'){
-                        if($type['id']==9){ ///ssss
-                        $array['parent_id']=    ( $request['faq_id'] == 'NoCat')?0:$request['faq_id'];
-                        }else{
-                        $array['faq_id']=    ( $request['faq_id'] == 'NoCat')?0:$request['faq_id'];
-                        }
-                    // }elseif($field == 'product_id'){
-                    //     $array[$field] =  $request[$field];
-
-                    //     dd($request['product_id']);
 
 
                     }elseif($field == 'count'){
@@ -257,22 +213,14 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
         }
 
 
-//        dd($array);
-
-        if(empty($request['id'])){
         $post =  Post::create($array);
-        $exe = "Eklendi";
-            } else {
-                $exe = "Güncellendi";
-                $post = Post::find($request['id']);
-                if ($post) {
+        // Aynı type_id'ye sahip, count değeri yeni post'un count'undan büyük veya eşit olan postların count'unu +1 artır
+        Post::where('type_id','=',$type['id'])
+        ->where('id','<>',$post['id'])
+        ->where('count','>=',$post['count'])
+        ->where('lang','=',$post['lang'])->increment('count',1);
+                $exe = "Eklendi";
 
-
-
-
-                    $post->update($array);
-                }
-            }
 
         if($request['copy_others']){
             foreach ($this->lang_array as $lang) {
@@ -280,10 +228,10 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
                     $newArray = $array;
                     $newArray['lang'] = $lang;
 
-                     // Eğer post_id gibi ilişkili bir alan varsa ana post'a bağlamak için kullan
-                    // $newArray['parent_id'] = $post->id; // örnek: çokdilli içerik için bağlama
 
-                    Post::create($newArray);
+                    $newPost = Post::create($newArray);
+
+
                 }
             }
         }
@@ -367,74 +315,9 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
         ->where('parent_id','=',$post['parent_id'])
         ->where('lang','=',$post['lang'])->count();
 
-        if($post['parent_id']>0){
-            $parent = Post::find($post['parent_id']);
-            $parent_id = $parent->id;
-
-        }else{
-            $parent = null;
-            $parent_id = 0;
-        }
-
 
         $fields = $this->getFields($type);
 
-        $cats = [];
-        if(in_array('faq_id',$fields)){
-
-            $cats = Post::select('id','title')->where('type_id','=',51)
-
-            ->where('lang','=', session()->get('selectedLang'))
-            ->orderBy('count', 'ASC')->get();
-
-        }
-
-        $products  =[];
-        if(in_array( 'product_id',$fields)){
-
-            $products = Post::select('id','title')->where('type_id','=',6)
-            ->where('lang','=', session()->get('selectedLang'))
-            ->where('show_post','=',1)
-            ->orderBy('count', 'ASC')->get();
-
-        }
-
-        $product_cats = [];
-
-        if($type['id']==6){ /// products
-                $product_cats =
-                Post::select('id','title')->where('type_id','=',5)
-                ->where('lang','=', session()->get('selectedLang'))
-                ->where('show_post','=',1)
-                ->orderBy('count', 'ASC')->get();
-
-
-         }
-
-
-        $tags = [];
-        $selected_tags = [];
-        if(in_array('tags',$fields)){
-
-            $tags = Post::select('id','title')->where('type_id','=',41)
-            ->where('lang','=', session()->get('selectedLang'))
-            ->orderBy('count', 'ASC')->get();
-
-            $selected = DB::table('blog_tag')->where('blog_id','=',$id)->get();
-
-            foreach($selected as $item){
-
-               $selected_tags[] = $item->tag_id;;
-            }
-
-        }
-
-        if($type->slug == 'sub_treatment' || $type->slug =='treatment_images'){
-            $routes  = ['TR'=>'/tedaviler','EN'=> '/treatments','DE'=> '/behandlungen'];
-            $slug_link = $routes[session()->get('selectedLang')]."/".Str::slug($post['title'])."/".$post['id'];
-        }else{
-            $slug_link = "";
-        }
 
         $parent_cat = Type::where('children','=',$type['slug'])->first();
 
@@ -446,24 +329,23 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
              $parent_cat = false;
         }
 
-        return view('admin_panel.content_form',[ 'type'=>$type,
-        'products'=>$products,'parent_cats'=>$parent_cats,'parent_cat'=>$parent_cat
-        ,'fields'=>$fields,'txt'=>$type['fields'],'langs'=>$this->lang_array,'lang'=>$post['lang'],'count'=>$count,
-        'product_cats'=>$product_cats,
-        'post'=>$post,'exe'=>"Güncelle",'route'=>'content-update-post','submit'=>$this->submit_form ,'parent_id'=>$parent_id,'parent'=>$parent,'cats'=>$cats,'slug_link'=>$slug_link,'tags'=>$tags,'selected_tags'=>$selected_tags,'video_image_array'=>$this->priority_array($fields)]);
+        return view('admin_panel.content_form',[ 'type'=>$type,'parent_cats'=>$parent_cats,
+        'parent_id'=>$post['parent_id'],
+        'fields'=>$fields,'txt'=>$type['fields'],'langs'=>$this->lang_array,'lang'=>$post['lang'],'count'=>$count,'post'=>$post,'exe'=>"Güncelle",'route'=>'content-update-post','submit'=>$this->submit_form , 'video_image_array'=>$this->priority_array($fields)]);
+
+
     }
 
 
     public function updatePost(Request $request){
-
-
-        try{
-            $type= Type::find($request['type_id']);
+    try{
+            $post = Post::find($request['id']);
+            $type= Type::find($post['type_id']);
 
             $fields = $this->getFields($type);
 
 
-            $post = Post::find($request['id']);
+
             $old_count = $post['count'];
             $old_parent = $post['parent_id'];
             $images = ['image','second_image','third_image','forth_image','fifth_image'];
@@ -519,8 +401,6 @@ public function countSelect($cat_id,Type $type,$post_id = 0){
 
                 }
                       //  Log::channel('data_check')->info($img.":::".$img_field);
-
-                }
 
             }
 
@@ -593,7 +473,7 @@ if($old_parent == $post['parent_id']){
 
         }
 
-        }
+            }
 
             return  $this->success([''],$type->name." Güncellendi" ,200);
         }catch (Exception $e){

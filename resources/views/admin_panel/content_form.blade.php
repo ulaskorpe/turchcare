@@ -49,7 +49,7 @@
 
 
                             <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="parent_id" id="parent_id" value="{{$parent_id }}">
+                            <input type="text" name="type_id" id="type_id" value="{{$type->id }}">
 
                             @if(!empty($post))
                                 <input type="hidden" name="id" value="{{$post->id}}" >

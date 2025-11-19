@@ -4,6 +4,9 @@
 /public/build
 /public/robust-assets
 /public/hot
+/public/post_images
+/public/richtexteditor
+/public/notes
 /public/storage
 /storage/*.key
 /vendor

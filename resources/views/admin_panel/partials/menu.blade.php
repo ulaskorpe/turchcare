@@ -9,7 +9,7 @@
 
             <i class="icon-key22"></i><span data-i18n="nav.dash.main"  class="menu-title">SUDO Panel </span><span class="tag hidden tag tag-danger tag-pill float-xs-right mr-2">5</span></a>
             <ul class="menu-content">
-              <li @if($type->active =='sudo') class="active" @endif><a href="{{route('sudo.types.index')}}" class="menu-item">Content Types </a></li>
+              <li @if(isset($type) && $type->active =='sudo') class="active" @endif><a href="{{route('sudo.types.index')}}" class="menu-item">Content Types </a></li>
               <li><a href="#" class="menu-item">Admins </a></li>
               <li><a href="#" class="menu-item">Roles </a></li>
 
@@ -19,32 +19,50 @@
 
         <li class=" nav-item"><a href="{{route('dashboard')}}">
 
+            <i class="icon-info"></i><span data-i18n="nav.dash.main"  class="menu-title">Site Bilgileri </span><span class="tag hidden tag tag-danger tag-pill float-xs-right mr-2">5</span></a>
+
+
+
+            <ul class="menu-content">
+
+              <li @if(isset($type) && $type->active =='info') class="active" @endif><a href="{{route('content-list','top_banner')}}" class="menu-item">Site Başlığı </a></li>
+
+
+             <li><a href="{{route('content-list','site_phone')}}" class="menu-item">Telefon + Adres </a></li>
+              <li><a href="{{route('content-list','keywords')}}" class="menu-item">Anahtar Kelimeler  </a></li>
+              <li><a href="{{route('content-list','description')}}" class="menu-item">Description </a></li>
+              <li><a href="{{route('content-list','seo_title')}}" class="menu-item">SEO Title </a></li>
+              <li><a href="{{route('content-list','seo_description')}}" class="menu-item">SEO Description </a></li>
+              <li><a href="{{route('content-list','seo_keywords')}}" class="menu-item">SEO Keywords </a></li>
+              <li><a href="{{route('content-list','seo_keywords')}}" class="menu-item">Sosyal Medya Linkleri </a></li>
+
+            </ul>
+          </li>
+        <li class=" nav-item"><a href="{{route('dashboard')}}">
+
           <i class="icon-home3"></i><span data-i18n="nav.dash.main"  class="menu-title">AnaSayfa </span><span class="tag hidden tag tag-danger tag-pill float-xs-right mr-2">5</span></a>
 
 
 
           <ul class="menu-content">
 
-            <li @if($type->active =='dashboard') class="active" @endif><a href="{{route('content-list','top_banner')}}" class="menu-item">Künye {{ $type->active }}</a></li>
 
-            <li><a href="{{route('content-list','slider')}}" class="menu-item">Slider  </a></li>
-            <li><a href="{{route('content-list','slider_second')}}" class="menu-item">Slider#2</a></li>
-            <li><a href="{{route('content-list','quotes')}}" class="menu-item">Alıntılar</a></li>
 
-       <!-- #endregion -->
+            <li  @if(isset($type) && $type->active =='home') class="active" @endif><a href="{{route('content-list','slider')}}" class="menu-item">Slider  </a></li>
 
-  <li><a href="{{route('content-list','contact_spot')}}" class="menu-item">İletişim Yazı</a></li>
+            <li><a href="{{route('content-list','seo_title')}}" class="menu-item">Choose Us Spot  </a></li>
+            <li><a href="{{route('content-list','seo_title')}}" class="menu-item">Choose Us Items  </a></li>
+
           </ul>
         </li>
         <li class=" nav-item"><a href="{{route('admin-messages')}}"><i class="icon-envelope"></i><span data-i18n="nav.changelog.main" class="menu-title">Mesajlar</span>
 
         <li class=" nav-item"><a href="#"><i class="icon-pencil-square-o"></i><span data-i18n="nav.dash.treat"  class="menu-title">Hakkımda</span></a>
             <ul class="menu-content">
-              <li  @if($type->active =='about') class="active" @endif><a href="{{route('content-list','about_us')}}" class="menu-item">Hakkımda</a>
+              <li  @if(isset($type) && $type->active =='about_us') class="active" @endif><a href="{{route('content-list','about_us')}}" class="menu-item">Hakkımızda Metin</a>
               </li>
-              <li><a href="{{route('content-list',parameters: 'experiences')}}" class="menu-item">Deneyimler</a>
+              <li  @if(isset($type) && $type->active =='about_us_slider') class="active" @endif><a href="{{route('content-list','about_us_slider')}}" class="menu-item">Hakkımızda Slider</a>
               </li>
-
             </ul>
           </li>
           <li class=" nav-item"><a href="#"><i class="icon-pencil-square-o"></i><span data-i18n="nav.dash.treat"  class="menu-title">Galeriler</span></a>
@@ -52,12 +70,18 @@
 
 
 
-              <li  @if($type->active =='gallery') class="active" @endif><a href="{{route('content-list','categories')}}" class="menu-item">Galeriler</a>
+              <li  @if(isset($type) && $type->active =='gallery') class="active" @endif><a href="{{route('content-list','categories')}}" class="menu-item">Galeriler</a>
               </li>
               <li><a href="{{route('content-list','gallery_item')}}" class="menu-item">Resimler</a>
               </li>
               <li><a href="{{route('content-list','videos')}}" class="menu-item">Videolar</a>
               </li>
+            </ul>
+          </li>
+          <li class=" nav-item"><a href="#"><i class="icon-medical-case"></i><span data-i18n="nav.dash.treatments" class="menu-title">Tedaviler</span></a>
+            <ul class="menu-content">
+              <li @if(isset($type) && $type->active =='treatments') class="active" @endif><a href="{{route('content-list','treatments')}}" class="menu-item">Tedavi Listesi</a></li>
+              <li @if(isset($type) && $type->active =='treatment_categories') class="active" @endif><a href="{{route('content-list','treatment_categories')}}" class="menu-item">Tedavi Kategorileri</a></li>
             </ul>
           </li>
 
@@ -72,7 +96,7 @@
           <ul class="menu-content">
 
 
-                <li  @if($type->active == 'blogs' ) class="active" @endif ><a href="{{route('admin-comments')}}">Yorumlar</a></span>
+                <li  @if(isset($type) && $type->active == 'blogs' ) class="active" @endif ><a href="{{route('admin-comments')}}">Yorumlar</a></span>
                 <li ><a href="{{route('content-list','blogs')}}" class="menu-item">Blog Liste</a></li>
            <!--     <li ><a href="{{route('content-list','tags')}}" class="menu-item">Blog Etiketler</a></li>-->
           </ul>

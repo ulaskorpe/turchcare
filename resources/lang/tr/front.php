@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title'=>'KRP ADMIN',
+    'title'=>'TURCHCARE ADMIN',
     'header' => [
         'request_a_quote' => 'Teklif Al',
     ],

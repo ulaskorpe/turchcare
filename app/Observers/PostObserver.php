@@ -11,7 +11,7 @@ class PostObserver
         if($post['count']>0){
         Post::where('lang', '=', $post['lang'])
         ->where('type_id', '=', $post['type_id'])
-        ->where('parent_id', '=', $post['parent_id'])
+//        ->where('parent_id', '=', $post['parent_id'])
         ->where('id', '<>', $post['id'])
         ->where('count', '>=', $post['count'])
         ->increment('count', 1);

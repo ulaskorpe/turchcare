@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 //use App\Models\Admin;
+use App\Models\Type;
 use App\Models\Role;
 use Illuminate\Support\Facades\Cookie;
 
@@ -38,11 +39,21 @@ class checkAdmin
             $data = [
                 'role'=> Role::find(auth()->user()->role_id)
             ];
+            $type = Type::where('slug','=','dashboard')->first();
+            if(empty($type)){
+                $type = Type::create([
+                    'name'=>'Dashboard',
+                    'slug'=>'dashboard',
+                    'single'=>0,
+                    'fields'=>'title',
+                    'active'=>'dashboard',
+                ]);
+            }
 
-             view()->share(['data'=>$data]);
+             view()->share(['data'=>$data, 'type'=>$type]);
         }
 
-
+     //   return $type;
         return $next($request);
     }
 }

@@ -4,7 +4,7 @@
         <ul class="nav navbar-nav" >
           <li class="nav-item mobile-menu hidden-md-up float-xs-left"><a class="nav-link nav-menu-main menu-toggle hidden-xs"><i class="icon-menu5 font-large-1"></i></a></li>
           <li class="nav-item"><a href="{{route('dashboard')}}" class="navbar-brand nav-link">
-            <h1>GIRIŞ</h1>
+           <img src="{{url('assets/images/logo-white.png')}}" alt="logo" style="width: 100px;">
            </a>
 
             </li>

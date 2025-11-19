@@ -1,46 +1,51 @@
-	<!-- Header Section -->
-	<header class="header">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-4 col-md-3 order-2 order-sm-1">
-					<div class="header__social">
-						<a href="{{__('front.facebook_link')}}" target="_blank"><i class="fa fa-facebook"></i></a>
-						<a href="{{__('front.twitter_link')}}" target="_blank"><i class="fa fa-twitter"></i></a>
-						<a href="{{__('front.instagram_link')}}" target="_blank"><i class="fa fa-instagram"></i></a>
-						<a href="{{__('front.youtube_link')}}" target="_blank"><i class="fa fa-youtube"></i></a>
-						<a href="{{__('front.linkedin_link')}}" target="_blank"><i class="fa fa-linkedin"></i></a>
-					</div>
-				</div>
-				<div class="col-sm-4 col-md-6 order-1  order-md-2 text-center">
-					<a href="/" class="site-logo">
-						<img src="{{url('post_images/'.$top_banner['image'])}}" alt="Esrin Özgüler" style="width: 100px">
-					</a>
-				</div>
-				<div class="col-sm-4 col-md-3 order-3 order-sm-3">
-				 <div class="header__switches">
+<header class="header trans_400">
+    <div class="header_content d-flex flex-row align-items-center jusity-content-start trans_400">
 
-						<a href="#" class="nav-switch"><i class="fa fa-bars"></i></a>
+        <!-- Logo -->
+        <div class="logo">
+            <a href="#">
+                <img src="{{url('assets/images/logo-transparent.png')}}" alt="logo" style="width: 100px;">
+            </a>
+        </div>
 
-					</div>
-				</div>
-			</div>
+        <!-- Main Navigation -->
+        <nav class="main_nav">
+            <ul class="d-flex flex-row align-items-center justify-content-start">
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="about.html">About us</a></li>
+                <li class="dropdown"><a href="services.html">Treatments <i class="fa fa-chevron-down" style="font-size: 10px; margin-left: 5px;"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Treatment 1</a></li>
+                        <li><a href="#">Treatment 2</a></li>
 
+                    </ul>
+                </li>
+                <li><a href="blog.html">News</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="header_extra d-flex flex-row align-items-center justify-content-end ml-auto">
 
-			<nav class="main__menu">
-				<ul class="nav__menu">
-					<li><a href="/"  @if($active=='home') class="menu--active" @endif>{{__('front.menu.home')}}</a></li>
-					<li><a href="{{$routes['about_us'][session()->get('selectedLang')]}}" @if($active=='about') class="menu--active" @endif>{{__('front.menu.about')}}</a></li>
-					<li><a href="{{$routes['galleries'][session()->get('selectedLang')]}}" @if($active=='gallery') class="menu--active" @endif>{{__('front.menu.gallery')}}</a></li>
-					<li><a href="{{$routes['videos'][session()->get('selectedLang')]}}" @if($active=='videos') class="menu--active" @endif>{{__('front.menu.videos')}}</a></li>
-					<li><a href="{{$routes['blogs'][session()->get('selectedLang')]}}" @if($active=='blogs') class="menu--active" @endif>{{__('front.menu.blogs')}}</a>
-                        {{-- <ul class="sub__menu">
-							<li><a href="{{$routes['about_us'][session()->get('selectedLang')]}}">Blog Single</a></li>
-						</ul> --}}
-                    </li>
-					<li><a href="{{$routes['contact'][session()->get('selectedLang')]}}" @if($active=='contact') class="menu--active" @endif>{{__('front.menu.contact')}}</a></li>
+            <!-- Work Hourse -->
+            <div class="work_hours">Mo - Sat: 8:00am - 9:00pm</div>
 
-				</ul>
-			</nav>
-		</div>
-	</header>
-	<!-- Header Section end -->
+            <!-- Header Phone -->
+            <div class="header_phone">+34 586 778 8892</div>
+
+            <!-- Appointment Button -->
+            <div class="button button_1 header_button"><a href="#">Make an Appointment</a></div>
+
+            <!-- Header Social -->
+            <div class="social header_social">
+                <ul class="d-flex flex-row align-items-center justify-content-start">
+                    <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                    <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                    <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+
+            <!-- Hamburger -->
+            <div class="hamburger"><i class="fa fa-bars" aria-hidden="true"></i></div>
+        </div>
+    </div>
+</header>
