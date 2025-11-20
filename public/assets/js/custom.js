@@ -47,6 +47,7 @@ $(document).ready(function()
 
 	initMenu();
 	initDropdown();
+	initMobileMenuDropdown();
 	initHomeSlider();
 	initDatePicker();
 	initSelect();
@@ -132,6 +133,47 @@ $(document).ready(function()
 				{
 					dropdown.removeClass('active');
 				}
+			});
+		}
+	}
+
+	/* 
+
+	4.1. Init Mobile Menu Dropdown
+
+	*/
+
+	function initMobileMenuDropdown()
+	{
+		var menuDropdown = $('.menu_nav .menu-dropdown');
+		
+		if(menuDropdown.length)
+		{
+			// Mobile menüdeki dropdown toggle'a tıklandığında
+			menuDropdown.find('.menu-dropdown-toggle').on('click', function(e)
+			{
+				e.preventDefault();
+				var $parent = $(this).closest('.menu-dropdown');
+				var $menu = $parent.find('.menu-dropdown-menu');
+				var $chevron = $(this).find('.menu-chevron');
+				
+				// Aç/kapa
+				$parent.toggleClass('active');
+				$menu.slideToggle(300);
+				
+				// Chevron'u döndür
+				if($parent.hasClass('active'))
+				{
+					$chevron.css('transform', 'rotate(180deg)');
+				}
+				else
+				{
+					$chevron.css('transform', 'rotate(0deg)');
+				}
+				
+				// Diğer dropdown menüleri kapat
+				menuDropdown.not($parent).removeClass('active').find('.menu-dropdown-menu').slideUp(300);
+				menuDropdown.not($parent).find('.menu-chevron').css('transform', 'rotate(0deg)');
 			});
 		}
 	}

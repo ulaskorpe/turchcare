@@ -651,6 +651,35 @@ section
 {
 	color: #1befc5;
 }
+.menu_nav ul li.menu-dropdown
+{
+	position: relative;
+}
+.menu_nav ul li.menu-dropdown .menu-dropdown-toggle
+{
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+.menu_nav ul li.menu-dropdown .menu-dropdown-menu
+{
+	display: none;
+	padding-left: 20px;
+	margin-top: 10px;
+}
+.menu_nav ul li.menu-dropdown .menu-dropdown-menu li
+{
+	margin-bottom: 8px;
+}
+.menu_nav ul li.menu-dropdown .menu-dropdown-menu li a
+{
+	font-size: 18px;
+	color: rgba(255,255,255,0.6);
+}
+.menu_nav ul li.menu-dropdown .menu-dropdown-menu li a:hover
+{
+	color: #1befc5;
+}
 .menu_social
 {
 	position: absolute;
